@@ -20,9 +20,11 @@
                         <p class="mb-4">Please Upload The Image File.</p> 
                         <p class="mb-5">Please check the valid input format as .jpg .jpeg .png</p>
 
+                    <form id="uploadForm" enctype="multipart/form-data">
                         <label for="imageInput" class="lb"><strong>Please select the image to upload.</strong></label>
                         <input type="file" accept="image/jpeg, image/png, image/jpg" id="imageInput" name="image" style="display: none;">
                         <button type="submit" class="btn btn-primary me-2" id="btn">Upload</button>
+                    </form>
                     </div>
                 </div>
                 <div class="col-md-6 order-first order-md-last" style="min-height: 250px;"><img class="w-100 h-100 fit-cover" id ="upload" src="https://cdn.bootstrapstudio.io/placeholders/1400x800.png" /></div>
@@ -33,11 +35,37 @@
 </br>
 <div class="container">
     <div class="text-white bg-dark border rounded border-0 p-4 p-md-5">
-        <h2 class="fw-bold text-white mb-3">Biben dum fringi dictum, augue purus</h2>
-        <p class="mb-4">Tincidunt laoreet leo, adipiscing taciti tempor. Primis senectus sapien, risus donec ad fusce augue interdum.</p>
-        <div class="my-3"></div>
+        <h2 class="fw-bold text-white mb-3">For Non-Institute based entry.</h2>
+        <p class="mb-4">Please fill out the form below for the entry to be made.</p>
     </div>
 </div>
+<div class="col-md-6 offset-md-3">
+    <br/>
+    <br/>
+    <br/>
+
+    <form method="POST" action="{% url 'add_record' %}">
+        {% csrf_token %}
+        {% if form.errors %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            Your Form Has Errors
+            {% for field in form %}
+            {% if field.errors %}
+            {{ field.errors }}
+            {% endif %}
+            {% endfor %}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+
+        {{ form.as_p }}
+
+        <br/>
+        <button type="submit" class="btn btn-secondary">Submit</button>
+    </form>
+
+
+</body>
 
 </section>
 
@@ -49,10 +77,6 @@
         padding: 10px;
         border-radius: 5px;
         cursor: pointer;
-    }
-
-    #btn{
-        margin-left: 20px;
     }
 
 
