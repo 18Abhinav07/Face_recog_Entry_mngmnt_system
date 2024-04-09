@@ -12,8 +12,6 @@
           <div class="card bg-light text-dark" style="border-radius: 1rem;">
             <div class="card-body p-5 text-center">
 
-              <div class="mb-md-5 mt-md-4 pb-5">
-
                 <h2 class="fw-bold mb-2 text-uppercase">Admin Login</h2>
                 <p class="text-black-50 mb-5">Please enter your username and password!</p>
 
@@ -28,8 +26,6 @@
                   </div>
                   <button type="submit" class="btn btn-primary">Log-in</button>
                 </form>
-
-              </div>
             </div>
           </div>
         </div>
@@ -40,38 +36,40 @@
 {% elif user_group == 'guard' %}
 
 <section class="vh-100 gradient-custom">
-    <div class="container py-5 h-100">
-      <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-          <div class="card bg-light text-dark" style="border-radius: 1rem;">
-            <div class="card-body p-5 text-center">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div class="card bg-light text-dark" style="border-radius: 1rem;">
+          <div class="card-body p-5 text-center">
 
-              <div class="mb-md-5 mt-md-4 pb-5">
+            <h2 class="fw-bold mb-2 text-uppercase">Guard Login</h2>
+            <p class="text-black-50 mb-5">Please enter your username and password!</p>
 
-                <h2 class="fw-bold mb-2 text-uppercase">Guard Login</h2>
-                <p class="text-black-50 mb-5">Please enter your username and password!</p>
+            <form method="POST" action="{% url 'login_user' user_group='guard' %}">
+              {% csrf_token %}
 
-                <form method="POST" action="{% url 'login_user' user_group='guard' %}">
-                  {% csrf_token %}
-
-                  <div class="mb-3">
-                    <input type="text" class="form-control" name="username" placeholder="Username" required>
-                    </div>
-                  <div class="mb-3">
-                    <input type="password" class="form-control" name="password" placeholder="Password" required>
-                  </div>
-                  <button type="submit" class="btn btn-primary">Log-in</button>
-                </form>
-
+              <div class="mb-3">
+                <input type="text" class="form-control" name="username" placeholder="Username" required>
               </div>
-            </div>
+              <div class="mb-3">
+                <input type="password" class="form-control" name="password" placeholder="Password" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Log-in</button>
+            </form>
           </div>
         </div>
       </div>
-  </section>
-
+    </div>
+  </div>
+</section>
 
 {% endif %}
+<style>
+  body{
+  background-color: rgb(236, 236, 236);
+}
+</style>
+
 
 {% endblock %}
 

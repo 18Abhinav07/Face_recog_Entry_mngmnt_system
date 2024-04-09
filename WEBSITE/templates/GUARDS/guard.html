@@ -3,84 +3,118 @@
 {% block content %}
 
 <section class="py-4 py-xl-5">
-    <div class="container">
-        <div class="text-white bg-dark border rounded border-0 p-4 p-md-5 ">
-            <h2 class="fw-bold text-white mb-3">Institute Based Individual</h2>
-            <p class="mb-4">Please choose the image upload for the students of the college.</p>
-        </div>
-    </div>
-</br>
-</br>
+    </br>
     <div class="container">
         <div class="bg-dark border rounded border-0 border-dark overflow-hidden">
             <div class="row g-0">
                 <div class="col-md-6">
                     <div class="text-white p-4 p-md-5">
                         <h2 class="fw-bold text-white mb-3">For <strong>Student</strong> Entry</h2>
-                        <p class="mb-4">Please Upload The Image File.</p> 
+                        <p class="mb-4">Please Upload The Image File.</p>
                         <p class="mb-5">Please check the valid input format as .jpg .jpeg .png</p>
 
-                    <form id="uploadForm" enctype="multipart/form-data">
-                        <label for="imageInput" class="lb"><strong>Please select the image to upload.</strong></label>
-                        <input type="file" accept="image/jpeg, image/png, image/jpg" id="imageInput" name="image" style="display: none;">
-                        <button type="submit" class="btn btn-primary me-2" id="btn">Upload</button>
-                    </form>
+                        <form id="uploadForm" enctype="multipart/form-data">
+                            <label for="imageInput" class="lb"><strong>Please select the image to
+                                    upload.</strong></label>
+                            <input type="file" accept="image/jpeg, image/png, image/jpg" id="imageInput" name="image"
+                                style="display: none;">
+                            <button type="submit" class="btn btn-primary me-2" id="btn">Upload</button>
+                        </form>
                     </div>
                 </div>
-                <div class="col-md-6 order-first order-md-last" style="min-height: 250px;"><img class="w-100 h-100 fit-cover" id ="upload" src="https://cdn.bootstrapstudio.io/placeholders/1400x800.png" /></div>
+                <div class="col-md-6 order-first order-md-last" style="min-height: 250px;"><img
+                        class="w-100 h-100 fit-cover" id="upload"
+                        src="https://cdn.bootstrapstudio.io/placeholders/1400x800.png" /></div>
             </div>
         </div>
     </div>
-</br>
-</br>
-<div class="container">
-    <div class="text-white bg-dark border rounded border-0 p-4 p-md-5">
-        <h2 class="fw-bold text-white mb-3">For Non-Institute based entry.</h2>
-        <p class="mb-4">Please fill out the form below for the entry to be made.</p>
-    </div>
-</div>
-<div class="col-md-6 offset-md-3">
-    <br/>
-    <br/>
-    <br/>
-
-    <form method="POST" action="{% url 'add_record' %}">
-        {% csrf_token %}
-        {% if form.errors %}
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            Your Form Has Errors
-            {% for field in form %}
-            {% if field.errors %}
-            {{ field.errors }}
-            {% endif %}
-            {% endfor %}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <br />
+    <br />
+    <br />
+    <div class="container">
+        <div class="text-white bg-dark border rounded border-0 p-4 p-md-5">
+            <h2 class="fw-bold text-white mb-3">For Institute based entry.</h2>
+            <p class="mb-4">You may fill out the form below for the entry to be made if no picture is available.</p>
         </div>
-        {% endif %}
+    </div>
+    <br />
+    <br />
+    <br />
+    <div class="col-md-6 offset-md-3 frm">
+        <form method="POST" action="{% url 'add_student_record' %}">
+            {% csrf_token %}
+            {% if form.errors %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                Your Form Has Errors
+                {% for field in form %}
+                {% if field.errors %}
+                {{ field.errors }}
+                {% endif %}
+                {% endfor %}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
 
-        {{ form.as_p }}
+            {{ form1.as_p }}
 
-        <br/>
-        <button type="submit" class="btn btn-secondary">Submit</button>
-    </form>
+            <br />
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+    </br>
+    </br>
+    <div class="container">
+        <div class="text-white bg-dark border rounded border-0 p-4 p-md-5">
+            <h2 class="fw-bold text-white mb-3">For Non-Institute based entry.</h2>
+            <p class="mb-4">Please fill out the form below for the entry to be made.</p>
+        </div>
+    </div>
+    <br />
+    <br />
+    <br />
+    <div class="col-md-6 offset-md-3 frm">
+        <form method="POST" action="{% url 'add_non_record' %}">
+            {% csrf_token %}
+            {% if form.errors %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                Your Form Has Errors
+                {% for field in form %}
+                {% if field.errors %}
+                {{ field.errors }}
+                {% endif %}
+                {% endfor %}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
 
+            {{ form2.as_p }}
 
-</body>
+            <br />
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
 
 </section>
 
 <style>
+    body {
+        background-image: linear-gradient(to top, #cdcdcd 0%, #ededed 100%);
+    }
 
-    .lb{
+    .frm {
+        margin-top: 10px;
+        padding: 20px;
+        border-radius: 5px;
+
+    }
+
+    .lb {
         background-color: #bc2a20;
         color: white;
         padding: 10px;
         border-radius: 5px;
         cursor: pointer;
     }
-
-
-    
 </style>
 
 <script>
@@ -88,45 +122,45 @@
     let upload = document.getElementById("upload")
     let input = document.getElementById("imageInput")
 
-    input.onchange = function(){
+    input.onchange = function () {
         upload.src = URL.createObjectURL(input.files[0])
     }
 
-    document.getElementById('uploadForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    var formData = new FormData();
-    formData.append('image', document.getElementById('imageInput').files[0]);
-    fetch('/upload/', {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-CSRFToken': getCookie('csrftoken')
-        }
-    }).then(response => {
-        if (response.ok) {
-            console.log('Image uploaded successfully');
-        } else {
-            console.error('Error uploading image');
-        }
-    }).catch(error => {
-        console.error('Error uploading image:', error);
+    document.getElementById('uploadForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        var formData = new FormData();
+        formData.append('image', document.getElementById('imageInput').files[0]);
+        fetch('/upload/', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        }).then(response => {
+            if (response.ok) {
+                console.log('Image uploaded successfully');
+            } else {
+                console.error('Error uploading image');
+            }
+        }).catch(error => {
+            console.error('Error uploading image:', error);
+        });
     });
-});
 
-function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
             }
         }
+        return cookieValue;
     }
-    return cookieValue;
-}
 
 </script>
 
