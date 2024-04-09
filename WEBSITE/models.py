@@ -21,4 +21,15 @@ class NON_INSTITUTE_ADMITTED(models.Model):
     vehicle_no = models.CharField(max_length=10)
     
     
+class STUDENTS_DATA(models.Model):
+    
+    roll_no = models.IntegerField()
+    name = models.CharField(max_length=50)
+    room_no = models.IntegerField()
+    phone = models.IntegerField()
+    email = models.EmailField()
+    batch = models.CharField(max_length=15)
+    
+    
+    
 

@@ -36,12 +36,44 @@
 </div>
 </div>
 </div>
-
+</br>
+</br>
+<div class="container">
+    <div class="text-white bg-dark border rounded border-0 p-4 p-md-5">
+        <h2 class="fw-bold text-white mb-3">You may also get the details of the students by uploading their picture.</h2>
+    </div>
+</div>
 
 </br>
 </br>
+<div class="container">
+    <div class="bg-dark border rounded border-0 border-dark overflow-hidden">
+        <div class="row g-0">
+            <div class="col-md-6">
+                <div class="text-white p-4 p-md-5">
+                    <h2 class="fw-bold text-white mb-3">For <strong>Student</strong> Entry</h2>
+                    <p class="mb-4">Please Upload The Image File.</p>
+                    <p class="mb-5">Please check the valid input format as .jpg .jpeg .png</p>
 
-
+                    <form method="POST" enctype="multipart/form-data" action="{% url 'upload_image' user='admin' %}">
+                        {% csrf_token %}
+                        <label for="imageInput" class="lb"><strong>Please select the image to
+                                upload.</strong></label>
+                        <input type="file" id="imageInput" name="image"
+                            style="display: none;">
+                        <button type="submit" class="btn btn-primary me-2" id="btn">Upload</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-6 order-first order-md-last" style="min-height: 250px;"><img
+                    class="w-100 h-100 fit-cover" id="upload"
+                    src="https://cdn.bootstrapstudio.io/placeholders/1400x800.png" /></div>
+        </div>
+    </div>
+</div>
+</br>
+</br>
+</br>
 {% if data %}
 <div style="text-align: center;">
     <h4 style="font-weight: bold; color:rgb(120, 120, 120)">All records ordered batch wise.</h4>
@@ -86,7 +118,6 @@
 </br>
 </br>
 </br>
-
 {% else %}
 
 
@@ -129,7 +160,6 @@
 {% endif %}
 
 {% if entries2 %}
-
 <div class="container">
     <div style="text-align: center;">
         <h4 style="font-weight: bold; color:rgb(120, 120, 120)">Records based on roll number: {{filter_dict.roll_no}}
@@ -167,7 +197,6 @@
 </div>
 
 {% endif %}
-
 
 {% if entries3 %}
 
@@ -215,14 +244,42 @@
 
 
 <style>
-    body {
-        background-color: rgb(239, 239, 239);
-    }
+   
     .cnt {
         margin-top: 30px;
         margin-bottom: 30px;
         border-radius: 10px;
         border: 1px solid rgb(160, 158, 158);
     }
+
+    body {
+        background-image: linear-gradient(to top, #cdcdcd 0%, #ededed 100%);
+    }
+
+    .frm {
+        margin-top: 10px;
+        padding: 20px;
+        border-radius: 5px;
+
+    }
+
+    .lb {
+        background-color: #bc2a20;
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
 </style>
+
+<script>
+
+let upload = document.getElementById("upload")
+let input = document.getElementById("imageInput")
+
+input.onchange = function () {
+    upload.src = URL.createObjectURL(input.files[0])
+}
+</script>
+
 {% endblock %}

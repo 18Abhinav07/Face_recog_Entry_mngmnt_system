@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.http import JsonResponse
 from .forms import *
 from .models import *
 import datetime
+from .FRCG import res
+import os
 
 
 def home(request):
@@ -64,14 +65,63 @@ def login_user(request, user_group):
             return redirect("home")
 
 
-def upload_image(request):
+def upload_image(request,user):
     if request.method == "POST" and request.FILES["image"]:
         image_file = request.FILES["image"]
-        image_format = image_file.content_type
+        image_file.name = "temp.jpg"
+        filepath = os.path.join('test/', image_file.name)
+        os.makedirs('test/',exist_ok=True)
+        with open(filepath, 'wb') as destination:
+            for chunk in image_file.chunks():
+                destination.write(chunk)
 
-        return JsonResponse({"success": "Image successfully uploaded"}, status=200)
+        print("Image saved to:", filepath)
+        db_path = "./WEBSITE/train/"  # path/to/file
+        roll_num = res(filepath)
+        roll_num = roll_num.replace(db_path, '')
+        roll_num = roll_num.replace('/', '')
+        print('roll',roll_num,)
+        if user == "guard":
+            
+            s_details = STUDENTS_DATA.objects.get(roll_no = roll_num)
+
+            new_obj = INSTITUTE_ADMITTED()
+            new_obj.name = s_details.name
+            new_obj.roll_no = s_details.roll_no
+            new_obj.reason = "FROM IMAGE"
+            new_obj.permission = "NO"
+            new_obj.phone = s_details.phone
+            new_obj.batch = s_details.batch
+            new_obj.vehicle_no = "NA"
+            new_obj.created_at = datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+            new_obj.save()
+            
+            form1 = AddInstituteAdmittedDetailsForm()
+            form2 = AddNIPDetailsForm()
+            return render(request, "GUARDS/guard.html", {"data": s_details,"form1": form1, "form2": form2})
+        
+        elif user == "admin":
+            
+            entries2 = INSTITUTE_ADMITTED.objects.filter(roll_no=roll_num)
+            entries1 = ()
+            entries3 = ()
+            filter_dict = {"name": '', "roll_no": roll_num, "batch": ''}
+
+            return render(
+                request,
+                "DATA/students_data.html",
+                {
+                    "entries1": entries1,
+                    "entries2": entries2,
+                    "entries3": entries3,
+                    "filter_dict": filter_dict,
+                },
+            )
+                
     else:
-        return JsonResponse({"error": "No image file found"}, status=400)
+        form1 = AddInstituteAdmittedDetailsForm()
+        form2 = AddNIPDetailsForm()
+        return render(request, "GUARDS/guard.html", {"form1": form1, "form2": form2})
 
 
 def add_student_record(request):
@@ -142,19 +192,18 @@ def get_students_data(request):
     entries5 = INSTITUTE_ADMITTED.objects.filter(batch="M.Tech")
     entries6 = INSTITUTE_ADMITTED.objects.filter(batch="PhD")
     data = (entries1, entries2, entries3, entries4, entries5, entries6)
-    
 
-    return render(request, "DATA/students_data.html", {"data":data})
+    return render(request, "DATA/students_data.html", {"data": data})
 
 
 def filter_student_records(request):
     if request.method == "POST":
         name = request.POST.get("name")
         roll_no = request.POST.get("roll_no")
-        if roll_no == '':
-           roll_no = None
+        if roll_no == "":
+            roll_no = None
         batch = request.POST.get("batch")
-        
+
         entries1 = ()
         entries2 = ()
         entries3 = ()
@@ -169,7 +218,7 @@ def filter_student_records(request):
         filter_dict = {"name": name, "roll_no": roll_no, "batch": batch}
 
         if name is None and roll_no is None and batch is None:
-           return redirect("get_students_data")
+            return redirect("get_students_data")
 
         return render(
             request,
@@ -178,7 +227,7 @@ def filter_student_records(request):
                 "entries1": entries1,
                 "entries2": entries2,
                 "entries3": entries3,
-                "filter_dict": filter_dict
+                "filter_dict": filter_dict,
             },
         )
     else:
