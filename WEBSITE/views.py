@@ -6,6 +6,7 @@ from .models import *
 import datetime
 from .FRCG import res
 import os
+from django.http import JsonResponse
 
 
 def home(request):
@@ -65,25 +66,28 @@ def login_user(request, user_group):
             return redirect("home")
 
 
-def upload_image(request,user):
+def upload_image(request, user):
     if request.method == "POST" and request.FILES["image"]:
         image_file = request.FILES["image"]
         image_file.name = "temp.jpg"
-        filepath = os.path.join('test/', image_file.name)
-        os.makedirs('test/',exist_ok=True)
-        with open(filepath, 'wb') as destination:
+        filepath = os.path.join("test/", image_file.name)
+        os.makedirs("test/", exist_ok=True)
+        with open(filepath, "wb") as destination:
             for chunk in image_file.chunks():
                 destination.write(chunk)
 
         print("Image saved to:", filepath)
         db_path = "./WEBSITE/train/"  # path/to/file
         roll_num = res(filepath)
-        roll_num = roll_num.replace(db_path, '')
-        roll_num = roll_num.replace('/', '')
-        print('roll',roll_num,)
+        roll_num = roll_num.replace(db_path, "")
+        roll_num = roll_num.replace("/", "")
+        print(
+            "roll",
+            roll_num,
+        )
         if user == "guard":
-            
-            s_details = STUDENTS_DATA.objects.get(roll_no = roll_num)
+
+            s_details = STUDENTS_DATA.objects.get(roll_no=roll_num)
 
             new_obj = INSTITUTE_ADMITTED()
             new_obj.name = s_details.name
@@ -91,21 +95,29 @@ def upload_image(request,user):
             new_obj.reason = "FROM IMAGE"
             new_obj.permission = "NO"
             new_obj.phone = s_details.phone
+            new_obj.branch = s_details.branch
             new_obj.batch = s_details.batch
             new_obj.vehicle_no = "NA"
             new_obj.created_at = datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S")
             new_obj.save()
             
+            messages.success(request, "The student record was successfully added.")
+
             form1 = AddInstituteAdmittedDetailsForm()
             form2 = AddNIPDetailsForm()
-            return render(request, "GUARDS/guard.html", {"data": s_details,"form1": form1, "form2": form2})
-        
+            return render(
+                request,
+                "GUARDS/guard.html",
+                {"data": s_details, "form1": form1, "form2": form2},
+            )
+
         elif user == "admin":
-            
+
             entries2 = INSTITUTE_ADMITTED.objects.filter(roll_no=roll_num)
             entries1 = ()
             entries3 = ()
-            filter_dict = {"name": '', "roll_no": roll_num, "batch": ''}
+            entries4 = ()
+            filter_dict = {"name": "", "roll_no": roll_num, "batch": "", "branch": ""}
 
             return render(
                 request,
@@ -114,10 +126,11 @@ def upload_image(request,user):
                     "entries1": entries1,
                     "entries2": entries2,
                     "entries3": entries3,
+                    "entries4": entries4,
                     "filter_dict": filter_dict,
                 },
             )
-                
+
     else:
         form1 = AddInstituteAdmittedDetailsForm()
         form2 = AddNIPDetailsForm()
@@ -203,10 +216,12 @@ def filter_student_records(request):
         if roll_no == "":
             roll_no = None
         batch = request.POST.get("batch")
+        branch = request.POST.get("branch")
 
         entries1 = ()
         entries2 = ()
         entries3 = ()
+        entries4 = ()
 
         if name is not None:
             entries1 = INSTITUTE_ADMITTED.objects.filter(name=name)
@@ -214,8 +229,15 @@ def filter_student_records(request):
             entries2 = INSTITUTE_ADMITTED.objects.filter(roll_no=roll_no)
         if batch is not None:
             entries3 = INSTITUTE_ADMITTED.objects.filter(batch=batch)
+        if branch is not None:
+            entries4 = INSTITUTE_ADMITTED.objects.filter(branch=branch)
 
-        filter_dict = {"name": name, "roll_no": roll_no, "batch": batch}
+        filter_dict = {
+            "name": name,
+            "roll_no": roll_no,
+            "batch": batch,
+            "branch": branch,
+        }
 
         if name is None and roll_no is None and batch is None:
             return redirect("get_students_data")
@@ -227,6 +249,7 @@ def filter_student_records(request):
                 "entries1": entries1,
                 "entries2": entries2,
                 "entries3": entries3,
+                "entries4": entries4,
                 "filter_dict": filter_dict,
             },
         )
@@ -237,6 +260,176 @@ def filter_student_records(request):
 def get_details(request):
     entries = NON_INSTITUTE_ADMITTED.objects.all()
     return render(request, "DATA/details.html", {"entries": entries})
+
+
+def student_management(request):
+    if request.user.is_authenticated:
+        return render(request, "ADMINS/admin_choice.html", {})
+    else:
+        messages.success(request, "You Must Be Logged In...")
+        return redirect("home")
+
+
+def new_student(request):
+    if request.user.is_authenticated:
+        form = AddStudentDetailsForm()
+        return render(request, "STUDENTS/student_management.html", {"form": form})
+    else:
+        messages.success(request, "You Must Be Logged In...")
+        return redirect("home")
+
+
+def add_student_details(request):
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            form = AddStudentDetailsForm(request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "The student was successfully created.")
+                return redirect("new_student")
+            else:
+                messages.success(request, "The student was not created.")
+                return redirect("new_student")
+
+        else:
+            form = AddStudentDetailsForm(request.POST)
+            return render(request, "STUDENTS/student_management.html", {"form": form})
+    else:
+        messages.success(request, "You Must Be Logged In...")
+        return redirect("home")
+
+
+def update_student(request):
+    if request.user.is_authenticated:
+        form = UpdateStudentForm()
+        return render(request, "STUDENTS/roll.html", {"form": form})
+    else:
+        messages.success(request, "You Must Be Logged In...")
+        return redirect("home")
+
+
+def check(request):
+    if request.method == "POST":
+        roll_no = request.POST.get("roll_no")
+        if roll_no == "":
+            roll_no = None
+            messages.success(request, "There was an error in you roll number.")
+            return redirect("update_student")
+        entries = STUDENTS_DATA.objects.filter(roll_no=roll_no)
+        form1 = AddStudentDetailsForm()
+        return render(
+            request,
+            "STUDENTS/update_student.html",
+            {"entries": entries, "roll": roll_no, "form1": form1},
+        )
+    else:
+        form = UpdateStudentForm()
+        return render(request, "STUDENTS/roll.html", {"form": form})
+
+
+def update_student_details(request):
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            roll_num = request.POST.get("roll_no")
+            s_det = STUDENTS_DATA.objects.get(roll_no=roll_num)
+
+            name = request.POST.get("name")
+            email = request.POST.get("email")
+            phone = request.POST.get("phone")
+            room_no = request.POST.get("room_no")
+            batch = request.POST.get("batch")
+            branch = request.POST.get("branch")
+
+            data_dict = {
+                "roll_no": roll_num,
+                "name": s_det.name,
+                "email": s_det.email,
+                "phone": s_det.phone,
+                "room_no": s_det.room_no,
+                "batch": s_det.batch,
+                "branch": s_det.branch,
+            }
+
+            student = STUDENTS_DATA.objects.get(roll_no=roll_num)
+            student.name = name
+            student.email = email
+            student.phone = phone
+            student.room_no = room_no
+            student.batch = batch
+            student.branch = branch
+            student.roll_no = roll_num
+            student.save()
+
+            messages.success(request, "The student was successfully updated.")
+            entries1 = STUDENTS_DATA.objects.filter(roll_no=roll_num)
+
+            return render(
+                request,
+                "STUDENTS/update_student.html",
+                {"entries0": data_dict, "roll": roll_num, "entries1": entries1},
+            )
+        else:
+            form = UpdateStudentForm()
+            return render(request, "STUDENTS/update_student.html", {"form": form})
+    else:
+        messages.success(request, "You Must Be Logged In...")
+        return redirect("home")
+
+
+def delete_student(request):
+    if request.user.is_authenticated:
+        form = UpdateStudentForm()
+        return render(request, "STUDENTS/roll_d.html", {"form": form})
+    else:
+        messages.success(request, "You Must Be Logged In...")
+        return redirect("home")
+
+
+def check_r(request):
+    if request.method == "POST":
+        roll_no = request.POST.get("roll_no")
+        if roll_no == "":
+            roll_no = None
+            messages.success(request, "There was an error in you roll number.")
+            return redirect("delete_student")
+        entries = STUDENTS_DATA.objects.filter(roll_no=roll_no)
+        l_entries = INSTITUTE_ADMITTED.objects.filter(roll_no=roll_no)
+        return render(
+            request,
+            "STUDENTS/delete.html",
+            {
+                "entries": entries,
+                "l_entries": l_entries,
+                "roll": roll_no,
+            },
+        )
+    else:
+        form = UpdateStudentForm()
+        return render(request, "STUDENTS/roll_d.html", {"form": form})
+
+
+def confirm_delete(request):
+    if request.user.is_authenticated:
+        if request.method == "POST":
+            response = request.POST.get("response")
+            roll_num = request.POST.get("roll_no")
+            if response == "YES":
+                student = STUDENTS_DATA.objects.get(roll_no=roll_num)
+                student.delete()
+                messages.success(request, "The student was successfully deleted.")
+                return redirect("delete_student")
+            else:
+                messages.success(
+                    request,
+                    "The student was not deleted as the operation was cancelled.",
+                )
+                return redirect("delete_student")
+        else:
+            form = UpdateStudentForm()
+            return render(request, "STUDENTS/roll_d.html", {"form": form})
+    else:
+        messages.success(request, "You Must Be Logged In...")
+        return redirect("home")
 
 
 def logout_user(request):

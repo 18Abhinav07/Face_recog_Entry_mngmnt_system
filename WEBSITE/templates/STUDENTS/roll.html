@@ -4,13 +4,14 @@
 <section class="vh-100 gradient-custom">
     <div class="container py-5 h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5 ">
           <div class="card bg-light text-dark glow-on-hover" style="border-radius: 1rem;">
             <div class="card-body p-5 text-center">
 
-                <h2 class="fw-bold mb-2 text-uppercase">User Creation Form</h2>
-                <p class="text-black-50 mb-5">Please enter the details of the user.</p>
+                <h2 class="fw-bold mb-2 text-uppercase">Student Update</h2>
+                <p class="text-black-50 mb-5">Please enter the roll number of the student.</p>
 
-                <form method="POST" action="{% url 'register' %}">
+                <form method="POST" action="{% url 'check' %}">
                     {% csrf_token %}
                     {% if form.errors %}
                     <div class="alert alert-warning alert-dismissible fade show" role="alert">
@@ -23,16 +24,20 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                     {% endif %}
+        
                     {{ form.as_p }}
                     <button type="submit" class="btn btn-primary">Send</button>
                 </form>
             </div>
           </div>
+        </div>
       </div>
   </section>
   
-  
 <style>
+    body {
+        background-color: rgb(220, 220, 220);
+    }
 
     .glow-on-hover:before {
         content: '';
@@ -89,7 +94,8 @@
             background-position: 0 0;
         }
     }
-
 </style>
+
+
 
 {% endblock %}

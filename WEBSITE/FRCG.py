@@ -1,4 +1,3 @@
-
 import face_recognition
 import os
 
@@ -8,6 +7,7 @@ def get_name(known_image, db_path):
     
     known_encoding = face_recognition.face_encodings(known_image)[0]
     for file in os.walk(db_path):
+        print("files in db path------------>" ,file)
         for f in file[2]:
             if f.endswith('.jpg'):
                 #print(f)
@@ -20,16 +20,22 @@ def get_name(known_image, db_path):
                     return db_path
 
 def res(file):
-    print('file :',file)
+    print('file sent by user :',file)
     file_path = './WEBSITE/train/'
     for dirs in os.walk(file_path):
+        print("----------->")
         print(dirs)
         for d in dirs[1]:
             db_path = './WEBSITE/train/'+d+'/'
+            print("------------>" ,file)
+            print("db_path",db_path)
             print('dirs', d)
-            
+            print("----------->" ,file) 
             res = get_name(file, db_path)
             print('result',res)
-            if res:
-                return res
+        if res:
+            return res
+        else:
+            return 0
+           
 

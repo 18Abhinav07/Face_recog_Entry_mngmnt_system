@@ -100,7 +100,7 @@ class AddNIPDetailsForm(forms.ModelForm):
         label="",
     )
 
-    phone = forms.IntegerField(
+    phone = forms.CharField(
         required=False,
         widget=forms.NumberInput(
             attrs={"placeholder": "Phone", "class": "form-control"},
@@ -116,6 +116,7 @@ class AddNIPDetailsForm(forms.ModelForm):
         ),
         label="",
     )
+    
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -171,7 +172,7 @@ class AddInstituteAdmittedDetailsForm(forms.ModelForm):
         label="",
     )
 
-    phone = forms.IntegerField(
+    phone = forms.CharField(
         required=True,
         widget=forms.NumberInput(
             attrs={"placeholder": "Phone", "class": "form-control"}
@@ -188,6 +189,7 @@ class AddInstituteAdmittedDetailsForm(forms.ModelForm):
     )
     
     BATCH_CHOICES = (
+        ('','Select a batch'),
         ('First Year', 'First Year'),
         ('Second Year', 'Second Year'),
         ('Third Year', 'Third Year'),
@@ -202,6 +204,20 @@ class AddInstituteAdmittedDetailsForm(forms.ModelForm):
         label="",
         widget=forms.Select(attrs={"class": "form-control"}),
     )
+    
+    BRANCH_CHOICES = (
+        ('','Select a branch'),
+        ('CSE','CSE'),
+        ('ECE','ECE'),
+        ('HSS','HSS')
+    )
+    
+    branch = forms.ChoiceField(
+        choices=BRANCH_CHOICES,
+        required=True,
+        label="",
+        widget=forms.Select(attrs={"class": "form-control"}),
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -212,3 +228,94 @@ class AddInstituteAdmittedDetailsForm(forms.ModelForm):
     class Meta:
         model = INSTITUTE_ADMITTED
         exclude = ["user"]
+            
+        
+class AddStudentDetailsForm(forms.ModelForm):
+
+    name = forms.CharField(
+        required=True,
+        widget=forms.widgets.TextInput(
+            attrs={"placeholder": "Name", "class": "form-control"}
+        ),
+        label="",
+    )
+
+    roll_no = forms.IntegerField(
+        required=True,
+        widget=forms.NumberInput(
+            attrs={"placeholder": "Roll Number", "class": "form-control"}
+        ),
+        label="",
+    )
+
+    email = forms.EmailField(
+        required=True,
+        widget=forms.widgets.TextInput(
+            attrs={"placeholder": "Email", "class": "form-control"}
+        ),
+        label="",
+    )
+
+    room_no = forms.IntegerField(
+        required=True,
+        widget=forms.widgets.TextInput(
+            attrs={"placeholder": "Room Number", "class": "form-control"}
+        ),
+        label="",
+    )
+
+    phone = forms.CharField(
+        required=True,
+        widget=forms.NumberInput(
+            attrs={"placeholder": "Phone", "class": "form-control"}
+        ),
+        label="",
+    )
+    
+    BATCH_CHOICES = (
+        ('','Select a batch'),
+        ('First Year', 'First Year'),
+        ('Second Year', 'Second Year'),
+        ('Third Year', 'Third Year'),
+        ('Fourth Year', 'Fourth Year'),
+        ('M.Tech', 'M.Tech'),
+        ('PhD', 'PhD'),
+    )
+    
+    batch = forms.ChoiceField(
+        choices=BATCH_CHOICES,
+        required=True,
+        label="",
+        widget=forms.Select(attrs={"class": "form-control"}),
+    )
+    
+    BRANCH_CHOICES = (
+        ('','Select a branch'),
+        ('CSE','CSE'),
+        ('ECE','ECE'),
+        ('HSS','HSS')
+    )
+    
+    branch = forms.ChoiceField(
+        choices=BRANCH_CHOICES,
+        required=True,
+        label="",
+        widget=forms.Select(attrs={"class": "form-control"}),
+    )
+
+    class Meta:
+        model = STUDENTS_DATA
+        exclude = ["user"]
+
+
+class UpdateStudentForm(forms.ModelForm):
+    roll_no = forms.IntegerField(
+        widget=forms.NumberInput(
+            attrs={"placeholder": "Roll Number", "class": "form-control"}
+        ),
+        label="",
+    )
+
+    class Meta:
+        model = STUDENTS_DATA
+        exclude = ['user','name','email','phone','room_no','batch','branch']
