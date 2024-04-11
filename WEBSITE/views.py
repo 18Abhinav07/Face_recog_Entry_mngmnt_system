@@ -432,6 +432,32 @@ def confirm_delete(request):
         return redirect("home")
 
 
+def analytics(request):
+    if request.user.is_authenticated:
+        return render(request, "DATA/analytics.html", {})
+    else:
+        messages.success(request, "You Must Be Logged In...")
+        return redirect("home")
+
+def chart_data(request):
+    
+    fy = INSTITUTE_ADMITTED.objects.filter(batch="First Year").count()
+    sy = INSTITUTE_ADMITTED.objects.filter(batch="Second Year").count()
+    ty = INSTITUTE_ADMITTED.objects.filter(batch="Third Year").count()
+    foy = INSTITUTE_ADMITTED.objects.filter(batch="Fourth Year").count()
+    mtech = INSTITUTE_ADMITTED.objects.filter(batch="M.Tech").count()
+    phd = INSTITUTE_ADMITTED.objects.filter(batch="PhD").count()
+    data = {
+        'firstYear': fy,
+        'secondYear': sy,
+        'thirdYear': ty,
+        'fourthYear': foy,
+        'mTech': mtech,
+        'phd': phd
+    }
+    return JsonResponse(data)
+    
+
 def logout_user(request):
     logout(request)
     messages.success(request, "Logged out successfully")

@@ -21,14 +21,15 @@
                         <p class="card-text">Create a new admin that can manage the page or create a guard user that
                             works on the entry. You can also work on student data.</p>
                         <a href="{% url 'new_user' %}" class="btn btn-primary" role="button">User creation form</a>
-                        <a href="{% url 'student_management' %}" class="btn btn-primary" role="button">Student Dashboard</a>
+                        <a href="{% url 'student_management' %}" class="btn btn-primary" role="button">Student
+                            Dashboard</a>
                     </div>
                 </div>
             </div>
             <div class="col">
                 <div class="card glow-on-hover d-flex">
                     <div class="card-body p-4">
-                        <h4 class="card-title">Student Details</h4>
+                        <h4 class="card-title">Student Details / Analytics </h4>
                         </br>
 
                         <p class="card-text">Get tabular as well as analytical data for the late entry system for the
@@ -36,6 +37,8 @@
                         </br>
                         <a href="{% url 'get_students_data' %}" class="btn btn-primary" role="button">Student
                             Details</a>
+                        <a href="{% url 'analytics' %}" class="btn btn-primary" role="button">Student
+                            Analytics</a>
                     </div>
                 </div>
             </div>
@@ -44,7 +47,7 @@
                     <div class="card-body p-4">
                         <h4 class="card-title">Other Details</h4>
                         </br>
-                        <p class="card-text">Get tabular as well as analytical data for the late entry system for the
+                        <p class="card-text">Get tabular data for the late entry system for the
                             entries made in the institute by people other than the students.</p>
                         <a href="{% url 'get_details' %}" class="btn btn-primary" role="button">Details</a>
                     </div>
@@ -53,6 +56,7 @@
         </div>
     </div>
 </section>
+
 
 <style>
     body {

@@ -28,7 +28,10 @@ urlpatterns = [
     
     path('delete_student/', views.delete_student, name = 'delete_student'),
     path('check_r/', views.check_r, name='check_r'),
-    path('confirm_delete/', views.confirm_delete, name = 'confirm_delete')
+    path('confirm_delete/', views.confirm_delete, name = 'confirm_delete'),
+    
+    path('analytics/', views.analytics, name = 'analytics'),
+    path('chart_data/', views.chart_data, name ='chart_data'),
     
    
 ]
