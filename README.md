@@ -254,9 +254,4 @@ This file consists of the view mapping to the URL's:
 This project involves all the major functionality that Django provides with multiple table addition, authorisation, authentication, forms etc. I also involved an additional face recognition system to identify and make record on the basis of photographs. It involves using a face recognition model from github, so we need to have that model, all the functionality has been made for that. The site took ample amount of time to make to implement the logic and beautify.
 
 ## Working
-
-<<<<<<< HEAD
 Install all the requirements from the requirements.txt file and apply migrations.
-=======
-Install all the requirements from the requirements.txt file and apply migrations.
->>>>>>> 40649a7 (readme updated)
