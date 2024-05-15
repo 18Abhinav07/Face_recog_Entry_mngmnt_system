@@ -255,4 +255,8 @@ This project involves all the major functionality that Django provides with mult
 
 ## Working
 
+<<<<<<< HEAD
 Install all the requirements from the requirements.txt file and apply migrations.
+=======
+Install all the requirements from the requirements.txt file and apply migrations.
+>>>>>>> 40649a7 (readme updated)
